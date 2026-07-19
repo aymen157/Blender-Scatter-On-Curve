@@ -38,7 +38,7 @@ Once enabled, you can find the tool in two places:
 
 ## 🚀 How to Use (Step-by-Step)
 
-> ⚠️ **CRITICAL FIRST STEP:** Before doing anything, select your meshes and your curve, press `Ctrl + A` and choose **Apply Scale**. If your objects or curve have unapplied scaling, the math will stretch or break your scattered models!
+> ⚠️ **CRITICAL FIRST STEP:** Before doing anything, select your meshes and your curve, press `Ctrl + A` and choose **Apply Scale**. If your objects or curve have unapplied scaling, the scattered instances wouldn't look correct.
 
 ### The Selection Order Matters!
 Blender needs to know *what* you want to copy and *where* you want to put it.
