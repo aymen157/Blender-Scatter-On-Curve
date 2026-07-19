@@ -598,7 +598,7 @@ bl_info = {
     "blender": (4, 0, 0),
     "category": "Object",
     "version": (1, 0, 0),
-    "author": "Aymen",
+    "author": "aymen157",
     "location": "Object Menu > Scatter on curve",
     "description": "Scatter objects along a curve with randomization options",
     "doc_url": "https://github.com/aymen157/Blender-Scatter-On-Curve",
