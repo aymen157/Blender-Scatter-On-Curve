@@ -1,8 +1,10 @@
+
 # 🌿 Scatter Objects on Curve (Blender Addon)
 
 A lightweight tool for Blender 4.0+ that lets you easily copy, distribute, and randomize multiple objects along a curve. Perfect for creating chains, tracks, path railings, scattering rocks along a trail, or spacing out sci-fi details!
 
 ![Example](docs/doc.blender_pJDhY3Ootn.png)
+https://github.com/user-attachments/assets/25ac3030-ffc8-46f7-979b-07dfaf17c96b
 
 ---
 
