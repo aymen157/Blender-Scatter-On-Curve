@@ -329,17 +329,18 @@ def scatter_objects_on_curve(
 
             scale = (1, 1, 1)
             # Random scale
-            if random_scale_uniform:
-                f = random.uniform(
-                    random_scale_uniform_range.x, random_scale_uniform_range.y
-                )
-                scale = (f, f, f)
-            elif random_scale:
-                scale = (
-                    random.uniform(random_scale_min.x, random_scale_max.x),
-                    random.uniform(random_scale_min.y, random_scale_max.y),
-                    random.uniform(random_scale_min.z, random_scale_max.z),
-                )
+            if random_scale:
+                if random_scale_uniform:
+                    f = random.uniform(
+                        random_scale_uniform_range.x, random_scale_uniform_range.y
+                    )
+                    scale = (f, f, f)
+                elif random_scale:
+                    scale = (
+                        random.uniform(random_scale_min.x, random_scale_max.x),
+                        random.uniform(random_scale_min.y, random_scale_max.y),
+                        random.uniform(random_scale_min.z, random_scale_max.z),
+                    )
 
             old_rotation = current_obj.rotation_quaternion
             old_scale = current_obj.scale
