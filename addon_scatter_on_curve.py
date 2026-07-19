@@ -53,7 +53,7 @@ def scatter_objects_on_curve(
     random_flip=Vector((0, 0, 0)),
     align_to_tangent=0.0,  # strength -1..1 (float) - negative values flip direction
     align_to_normal=0.0,  # strength -1..1 (float) - negative values flip direction
-    forward_axis="Y",  # which object axis should point along curve: 'X', 'Y', or 'Z'
+    forward_axis="-Y",  # which object axis should point along curve: 'X', 'Y', or 'Z'
     up_axis="Z",  # which object axis should point up (normal): 'X', 'Y', or 'Z'. cannot be = forward axis
     # radians: rotation of normal around tangent
     # 0 angle = from curve point to z-up, by convention
@@ -98,30 +98,32 @@ def scatter_objects_on_curve(
         return
 
     # Validate axis parameters
+    # Check for negative signs
+    is_forward_neg = forward_axis.startswith("-")
+    is_up_neg = up_axis.startswith("-")
+
+    # Get pure base letters (X, Y, or Z)
+    forward_base = forward_axis.replace("-", "").upper()
+    up_base = up_axis.replace("-", "").upper()
+
     valid_axes = ["X", "Y", "Z"]
-    forward_axis = forward_axis.upper()
-    up_axis = up_axis.upper()
-
-    if forward_axis not in valid_axes:
-        print(f"Invalid forward_axis '{forward_axis}'. Must be 'X', 'Y', or 'Z'.")
+    if forward_base not in valid_axes or up_base not in valid_axes:
+        print("Invalid axis selection.")
         return
-    if up_axis not in valid_axes:
-        print(f"Invalid up_axis '{up_axis}'. Must be 'X', 'Y', or 'Z'.")
-        return
-    if forward_axis == up_axis:
-        print(f"forward_axis and up_axis cannot be the same ('{forward_axis}')")
+        
+    if forward_base == up_base:
+        print(f"Forward and Up base axes cannot be the same ('{forward_base}')")
         return
 
-    # Determine the third axis (right/side axis)
-    axes = ["X", "Y", "Z"]
-    side_axis = [ax for ax in axes if ax not in [forward_axis, up_axis]][0]
+    # Determine the third (side) axis base letter
+    side_base = [ax for ax in valid_axes if ax not in [forward_base, up_base]][0]
 
-    # Create axis mapping dictionaries
+    # Map base letters to matrix column indices (0=X, 1=Y, 2=Z)
     axis_to_index = {"X": 0, "Y": 1, "Z": 2}
-    forward_idx = axis_to_index[forward_axis]
-    up_idx = axis_to_index[up_axis]
-    side_idx = axis_to_index[side_axis]
-
+    forward_idx = axis_to_index[forward_base]
+    up_idx = axis_to_index[up_base]
+    side_idx = axis_to_index[side_base]
+    
     # Collection for scattered objects
     # we make each name unique because sometimes we do not want 2 consecutive scatters
     # in the same collection. (but for a same scatter with different objects, its ok)
@@ -275,9 +277,10 @@ def scatter_objects_on_curve(
             # Build target rotation matrix from basis vectors
             # Create rotation matrix based on user-specified axes
             target_matrix = Matrix.Identity(3)
-            # Assign vectors to matrix columns based on user axis choice
-            target_matrix.col[forward_idx] = tangent_dir
-            target_matrix.col[up_idx] = normal_dir
+            # Assign forward and up vectors, flipping them if a negative axis was chosen
+            target_matrix.col[forward_idx] = -tangent_dir if is_forward_neg else tangent_dir
+            target_matrix.col[up_idx] = -normal_dir if is_up_neg else normal_dir
+            # The side axis vector is calculated dynamically to stay right-handed
             target_matrix.col[side_idx] = binormal_dir
 
             # Convert to quaternion
@@ -873,12 +876,26 @@ class OBJECT_OT_scatter_on_curve(Operator):
     )
     forward_axis: EnumProperty(
         name="Forward Axis",
-        items=[("X", "X", ""), ("Y", "Y", ""), ("Z", "Z", "")],
-        default="Y",
+        items=[
+            ("X", "X", "Positive X"),
+            ("Y", "Y", "Positive Y"),
+            ("Z", "Z", "Positive Z"),
+            ("-X", "-X", "Negative X"),
+            ("-Y", "-Y", "Negative Y"),
+            ("-Z", "-Z", "Negative Z"),
+        ],
+        default="-Y",
     )
     up_axis: EnumProperty(
         name="Up Axis",
-        items=[("X", "X", ""), ("Y", "Y", ""), ("Z", "Z", "")],
+        items=[
+            ("X", "X", "Positive X"),
+            ("Y", "Y", "Positive Y"),
+            ("Z", "Z", "Positive Z"),
+            ("-X", "-X", "Negative X"),
+            ("-Y", "-Y", "Negative Y"),
+            ("-Z", "-Z", "Negative Z"),
+        ],
         default="Z",
     )
     normal_angle: FloatProperty(
