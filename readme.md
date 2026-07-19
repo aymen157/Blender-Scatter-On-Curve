@@ -56,6 +56,8 @@ Expand that panel to adjust your scatter on the fly:
 * **Random Scale / Rotation:** Tick these boxes to make things look messy and natural rather than uniform.
 * **Align to Tangent:** Slide this to `1.0` if you want your objects to tilt and face forward down the path of the curve.
 
+![Normal vs tangeent](docs/normal vs tangent.png)
+
 ---
 
 ## 💾 Saving Your Presets
